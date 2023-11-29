@@ -1,0 +1,14 @@
+-----PROGRESS----
+
+COMPELETED: 
+Stage 1 (initiation): 
+-Initiated Data Structures
+-Declared Structures
+
+IN-PROGRESS:
+Stage 2 (set_cell_value function): 
+-Created template
+-Must focus on storing the values in the underlying data structure now
+-Important that we are working with a copy of the text input into the function which is then freed
+-The functions can be stored in the data structure since that plays no impact on what text is displayed (atleast not yet) 
+-DO NOT free the text_copy in the set_cell_value because it is still being used by the 2D array by the pointers, it must be freed when the function for clearing the cell is called
