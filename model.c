@@ -8,23 +8,51 @@
 #include <string.h>
 #include <stdbool.h>
 
-// A data structure representing each cell in the grid (10x10).
-typedef struct {
-    char *text;
-    double numeric_value;
-    char *formula;
-} CellContent;
+stack_ptr stack_new() {
+    stack_ptr s = malloc(sizeof(struct stack));
+    s->head = NULL;
+    s->size = 0;
+    return s;
+}
 
-// Static global 2D array of CellContent structs.
-CellContent spreadsheet[NUM_ROWS][NUM_COLS];
+void stack_free(stack_ptr s) {
+    while (s->head != NULL){ // While the stack is not empty
+        struct stack_node* temp = s->head; // Create a temporary pointer to the top of the stack
+        s->head = s->head->next; // "Metaphorically remove the top plate"
+        if (temp->value) { // Check if the previous top node had any values
+            //free(temp->value); // If it did free the values (TAKEN OUT SINCE FREEING A SINGLE CHARACTER IS NOT NEEDED)
+        }
+        free(temp); // Free the entire node
+    }
+    free(s);
+}
 
-void model_init() {
-    // Initialize each cell with default values
+void stack_push(stack_ptr s, char c) {
+    struct stack_node* new_node = malloc(sizeof(struct stack_node)); // Allocate memory for the new node
+    new_node->value = c; // Set the value of the new node
+    new_node->next = s->head; // Set the new node to point to the current top
+    s->head = new_node; // Set the current to be the new node
+    s->size++; // Increment the size of the stack
+}
+
+bool stack_pop(stack_ptr s, char *out) {
+    if (s->head == NULL) { // Check if the stack exists
+        return false; // Return false if it does not exist
+    }
+    struct stack_node* temp = s->head; // Create a temporary pointer to a stack_node storing the memory address of the current head
+    *out = s->head->value; // Dereference the character storage location, assign it to store the value at the head node
+    s->head = s->head->next; // Change the head node to the next node
+    free(temp); // Free the previous head node
+    s->size--; // Decrement the size of the stack
+    return true; // Return true to show that a pop has occured 
+}
+
+void model_init() { // Initialize each cell with default values
     for (int row = ROW_1; row < NUM_ROWS; row++) {
         for (int col = COL_A; col < NUM_COLS; col++) {
             spreadsheet[row][col].text = "";
             spreadsheet[row][col].numeric_value = 0.0;
-            spreadsheet[row][col].formula = NULL;
+            spreadsheet[row][col].formula_stack = NULL;
         }
     }
 }
@@ -60,11 +88,14 @@ void set_cell_value(ROW row, COL col, char *text) {
 
     // Logic to store the text in the 2D array
     if(text_copy[0] == '=') { // If the text is a formula, store the formula and the numeric value (NEED TO ADD FUNCTIONALITY FOR INVALID FORMULAS, POSSIBLY A "INVALID" in the box or something)
-        spreadsheet[row][col].formula = text_copy; // Store the formula, unparsed (DEALING WITH THE FUNCTION WILL BE LEFT IN A LATER STAGE) 
+        spreadsheet[row][col].formula_stack = stack_new();  // Initialize the formula stack (This dynamically allocates memory for the stack)
+        for (size_t i = 0; i < strlen(text_copy); i++) { // Iterate through the text (the first character is '=')
+            stack_push(spreadsheet[row][col].formula_stack, text_copy[i]);  // Push each character onto the formula stack
+        }
         spreadsheet[row][col].numeric_value = 0.0; //Will not always store 0.0, this is TEMPORARY till evaluation is implemented
         spreadsheet[row][col].text = "FUNC"; // Set the text to FUNC to indicate that the cell contains a formula TEMPORARY
     } else { // If the text is a value, store the value and set the formula to NULL
-        spreadsheet[row][col].formula = NULL;
+        spreadsheet[row][col].formula_stack = NULL;
         if(parse_only_double(text_copy, &spreadsheet[row][col].numeric_value)) { // If the text is a number, store the numeric value (This directly stores the number)
             spreadsheet[row][col].text = text_copy; // Set the text to also display the number (in text form)
         } else { // If the text is not a number or a function, store the text with everything else default
@@ -80,10 +111,14 @@ void set_cell_value(ROW row, COL col, char *text) {
 }
 
 void clear_cell(ROW row, COL col) {
+    free(spreadsheet[row][col].text); // Free the text_copy from set_cell_value
+    stack_free(spreadsheet[row][col].formula_stack); // Free the formula stack
+    free(spreadsheet[row][col].formula_stack); // Free the pointer to the formula stack
+
     // Logic to clear the cell
     spreadsheet[row][col].text = "";
     spreadsheet[row][col].numeric_value = 0.0;
-    spreadsheet[row][col].formula = NULL;
+    spreadsheet[row][col].formula_stack = NULL;
 
     // In the future I will have to update the dependancies of any cells that depend on this cell
     // That could be done by iterating through a dependacy array the cleared cell will have, then updating each of the cells in the array
@@ -91,22 +126,38 @@ void clear_cell(ROW row, COL col) {
 
     // This just clears the display without updating any data structure. You will need to change this.
     update_cell_display(row, col, NULL);
-    free(spreadsheet[row][col].text); // Free the text_copy from set_cell_value
-    free(spreadsheet[row][col].formula); // Free the formula from set_cell_value
 }
 
 char *get_textual_value(ROW row, COL col) {
     // Allocate memory for the textual representation
     size_t text_length = strlen(spreadsheet[row][col].text); // Get the length of the text
     char *textual_value; // Declare the textual_value variable to be accessed anywhere in the function
-    if(spreadsheet[row][col].formula != NULL) { // If the cell contains a formula, return the formula
-        size_t formula_length = strlen(spreadsheet[row][col].formula); // Get the length of the formula
+    if(spreadsheet[row][col].formula_stack != NULL) { // If the cell contains a formula, return the formula
+        size_t formula_length = spreadsheet[row][col].formula_stack->size; // Get the ammount of characers in the formula
         textual_value = malloc(formula_length + 1); // Allocate memory for the formula
         if (textual_value == NULL) { // If malloc fails, exit the program
         // Handle allocation failure
         exit(ENOMEM);
         }
-        strcpy(textual_value, spreadsheet[row][col].formula); // Copy the formula into the allocated memory
+
+        // Create a temporary stack
+        stack_ptr temp_stack = stack_new();
+        // Copy characters from the original formula_stack to both textual_value and the temporary stack
+        for (size_t index = 0; index < formula_length; index++) {
+            char temp_char;
+            if (stack_pop(spreadsheet[row][col].formula_stack, &temp_char)) {
+                stack_push(temp_stack, temp_char);
+                textual_value[index] = temp_char;
+            }
+        }
+        // Push characters back to the original formula_stack
+        while (temp_stack->head != NULL) {
+            char temp_char;
+            if (stack_pop(temp_stack, &temp_char)) {
+                stack_push(spreadsheet[row][col].formula_stack, temp_char);
+            }
+        }
+        free(temp_stack); // Free the temporary stack
 
     } else { // If the cell does not contain a formula, return the text
         textual_value = malloc(text_length + 1); // Allocate memory for the text

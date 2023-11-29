@@ -85,6 +85,9 @@ CMakeFiles/testrunner.dir/testrunner.c.o: /Users/isaiah/Desktop/Career/Fall\ 202
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/signal.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/stdio.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/wait.h \
+  /Library/Developer/CommandLineTools/usr/lib/clang/15.0.0/include/__stddef_max_align_t.h \
+  /Library/Developer/CommandLineTools/usr/lib/clang/15.0.0/include/stdbool.h \
+  /Library/Developer/CommandLineTools/usr/lib/clang/15.0.0/include/stddef.h \
   /Library/Developer/CommandLineTools/usr/lib/clang/15.0.0/include/stdint.h \
   /Users/isaiah/Desktop/Career/Fall\ 2023/ELEC\ 278/Final\ Assignment/assignment/defs.h \
   /Users/isaiah/Desktop/Career/Fall\ 2023/ELEC\ 278/Final\ Assignment/assignment/interface.h \
@@ -93,6 +96,9 @@ CMakeFiles/testrunner.dir/testrunner.c.o: /Users/isaiah/Desktop/Career/Fall\ 202
   /Users/isaiah/Desktop/Career/Fall\ 2023/ELEC\ 278/Final\ Assignment/assignment/tests.h
 
 CMakeFiles/testrunner.dir/tests.c.o: /Users/isaiah/Desktop/Career/Fall\ 2023/ELEC\ 278/Final\ Assignment/assignment/tests.c \
+  /Library/Developer/CommandLineTools/usr/lib/clang/15.0.0/include/__stddef_max_align_t.h \
+  /Library/Developer/CommandLineTools/usr/lib/clang/15.0.0/include/stdbool.h \
+  /Library/Developer/CommandLineTools/usr/lib/clang/15.0.0/include/stddef.h \
   /Users/isaiah/Desktop/Career/Fall\ 2023/ELEC\ 278/Final\ Assignment/assignment/defs.h \
   /Users/isaiah/Desktop/Career/Fall\ 2023/ELEC\ 278/Final\ Assignment/assignment/model.h \
   /Users/isaiah/Desktop/Career/Fall\ 2023/ELEC\ 278/Final\ Assignment/assignment/testrunner.h \
@@ -122,6 +128,8 @@ CMakeFiles/testrunner.dir/tests.c.o: /Users/isaiah/Desktop/Career/Fall\ 2023/ELE
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_types/_va_list.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_types/_uid_t.h:
+
+/Library/Developer/CommandLineTools/usr/lib/clang/15.0.0/include/stdbool.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_types/_ucontext.h:
 
@@ -167,6 +175,8 @@ CMakeFiles/testrunner.dir/tests.c.o: /Users/isaiah/Desktop/Career/Fall\ 2023/ELE
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/stdio.h:
 
+/Library/Developer/CommandLineTools/usr/lib/clang/15.0.0/include/__stddef_max_align_t.h:
+
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/secure/_strings.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_types/_sigset_t.h:
@@ -210,6 +220,8 @@ CMakeFiles/testrunner.dir/tests.c.o: /Users/isaiah/Desktop/Career/Fall\ 2023/ELE
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_types/_rune_t.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/arm/endian.h:
+
+/Library/Developer/CommandLineTools/usr/lib/clang/15.0.0/include/stddef.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/arm/arch.h:
 

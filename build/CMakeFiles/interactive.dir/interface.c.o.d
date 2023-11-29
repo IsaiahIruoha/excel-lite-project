@@ -3,6 +3,9 @@ CMakeFiles/interactive.dir/interface.c.o: \
   /Users/isaiah/Desktop/Career/Fall\ 2023/ELEC\ 278/Final\ Assignment/assignment/interface.h \
   /Users/isaiah/Desktop/Career/Fall\ 2023/ELEC\ 278/Final\ Assignment/assignment/defs.h \
   /Users/isaiah/Desktop/Career/Fall\ 2023/ELEC\ 278/Final\ Assignment/assignment/model.h \
+  /Library/Developer/CommandLineTools/usr/lib/clang/15.0.0/include/stdbool.h \
+  /Library/Developer/CommandLineTools/usr/lib/clang/15.0.0/include/stddef.h \
+  /Library/Developer/CommandLineTools/usr/lib/clang/15.0.0/include/__stddef_max_align_t.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/ctype.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/_ctype.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/cdefs.h \
@@ -60,7 +63,6 @@ CMakeFiles/interactive.dir/interface.c.o: \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/secure/_stdio.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/secure/_common.h \
   /Library/Developer/CommandLineTools/usr/lib/clang/15.0.0/include/stdarg.h \
-  /Library/Developer/CommandLineTools/usr/lib/clang/15.0.0/include/stdbool.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/unctrl.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/curses.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/stdlib.h \

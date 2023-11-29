@@ -2,9 +2,10 @@ CMakeFiles/model.dir/model.c.o: \
   /Users/isaiah/Desktop/Career/Fall\ 2023/ELEC\ 278/Final\ Assignment/assignment/model.c \
   /Users/isaiah/Desktop/Career/Fall\ 2023/ELEC\ 278/Final\ Assignment/assignment/model.h \
   /Users/isaiah/Desktop/Career/Fall\ 2023/ELEC\ 278/Final\ Assignment/assignment/defs.h \
-  /Users/isaiah/Desktop/Career/Fall\ 2023/ELEC\ 278/Final\ Assignment/assignment/interface.h \
+  /Library/Developer/CommandLineTools/usr/lib/clang/15.0.0/include/stdbool.h \
   /Library/Developer/CommandLineTools/usr/lib/clang/15.0.0/include/stddef.h \
   /Library/Developer/CommandLineTools/usr/lib/clang/15.0.0/include/__stddef_max_align_t.h \
+  /Users/isaiah/Desktop/Career/Fall\ 2023/ELEC\ 278/Final\ Assignment/assignment/interface.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/stdlib.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/Availability.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/AvailabilityVersions.h \
@@ -89,5 +90,4 @@ CMakeFiles/model.dir/model.c.o: \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_types/_rsize_t.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/strings.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/secure/_strings.h \
-  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/secure/_string.h \
-  /Library/Developer/CommandLineTools/usr/lib/clang/15.0.0/include/stdbool.h
+  /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/secure/_string.h

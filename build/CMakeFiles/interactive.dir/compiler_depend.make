@@ -94,8 +94,10 @@ CMakeFiles/interactive.dir/interface.c.o: /Users/isaiah/Desktop/Career/Fall\ 202
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/stdio.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/wait.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/unctrl.h \
+  /Library/Developer/CommandLineTools/usr/lib/clang/15.0.0/include/__stddef_max_align_t.h \
   /Library/Developer/CommandLineTools/usr/lib/clang/15.0.0/include/stdarg.h \
   /Library/Developer/CommandLineTools/usr/lib/clang/15.0.0/include/stdbool.h \
+  /Library/Developer/CommandLineTools/usr/lib/clang/15.0.0/include/stddef.h \
   /Library/Developer/CommandLineTools/usr/lib/clang/15.0.0/include/stdint.h \
   /Users/isaiah/Desktop/Career/Fall\ 2023/ELEC\ 278/Final\ Assignment/assignment/defs.h \
   /Users/isaiah/Desktop/Career/Fall\ 2023/ELEC\ 278/Final\ Assignment/assignment/interface.h \
@@ -200,6 +202,8 @@ CMakeFiles/interactive.dir/interface.c.o: /Users/isaiah/Desktop/Career/Fall\ 202
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/strings.h:
 
+/Library/Developer/CommandLineTools/usr/lib/clang/15.0.0/include/__stddef_max_align_t.h:
+
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/_types/_intmax_t.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/machine/endian.h:
@@ -227,10 +231,6 @@ CMakeFiles/interactive.dir/interface.c.o: /Users/isaiah/Desktop/Career/Fall\ 202
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/string.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/malloc/_malloc_type.h:
-
-/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_types/_size_t.h:
-
-/Library/Developer/CommandLineTools/usr/lib/clang/15.0.0/include/stdint.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/stdlib.h:
 
@@ -292,9 +292,15 @@ CMakeFiles/interactive.dir/interface.c.o: /Users/isaiah/Desktop/Career/Fall\ 202
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_types/_ssize_t.h:
 
+/Library/Developer/CommandLineTools/usr/lib/clang/15.0.0/include/stdint.h:
+
+/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/sys/_types/_size_t.h:
+
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/AvailabilityInternalLegacy.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/AvailabilityInternal.h:
+
+/Library/Developer/CommandLineTools/usr/lib/clang/15.0.0/include/stddef.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/arm/arch.h:
 

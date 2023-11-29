@@ -2,6 +2,46 @@
 #define ASSIGNMENT_MODEL_H
 
 #include "defs.h"
+#include <stdbool.h>
+#include <stddef.h>
+
+struct stack_node {
+    char value; 
+    struct stack_node* next; 
+};
+
+struct stack {
+    // Null if the stack is empty.
+    struct stack_node* head;
+    size_t size; // The size of the stack
+};
+
+typedef struct stack* stack_ptr;
+
+// Creates an empty stack.
+// The stack pointer should be passed to stack_free when it is no longer needed,
+// to clean up its allocations.
+stack_ptr stack_new();
+
+// Destroys a stack, freeing all allocated memory.
+void stack_free(stack_ptr s);
+
+// Adds an entry to a stack.
+void stack_push(stack_ptr s, char c);
+
+// Removes an entry from a stack, storing the removed value in '*out'.
+// Returns false if the stack is empty.
+bool stack_pop(stack_ptr s, char *out);
+
+// A data structure representing each cell in the grid (10x10).
+typedef struct {
+    char *text;
+    double numeric_value;
+    stack_ptr formula_stack;
+} CellContent;
+
+// Static global 2D array of CellContent structs.
+CellContent spreadsheet[NUM_ROWS][NUM_COLS];
 
 // Initializes the data structure.
 //
