@@ -1,0 +1,46 @@
+-----PROGRESS----
+Stage 1 (initiation): 
+-Initiated Data Structures
+-Declared Structures
+
+Stage 2 (set_cell_value function): 
+-Created template
+-Must focus on storing the values in the underlying data structure now
+-Important that we are working with a copy of the text input into the function which is then freed
+-The functions can be stored in the data structure since that plays no impact on what text is displayed (atleast not yet) 
+-DO NOT free the text_copy in the set_cell_value because it is still being used by the 2D array by the pointers, it must be freed when the function for clearing the cell is called
+
+-Adding base clear cell and and generate functions, these will be simplified as stage 2 only includes the textual values
+-Recognized that the get_textual_value function passes a string to the interface which deals with the memory management on its own 
+-Generate function in the future will have to display different information (text or formula) depending on what is inside of the cell storage
+
+Stage 3 (Formula storage):
+-Now I am moving on to task 3 and 4, since I started out with formulas in my cell structure, I am done task 3
+
+Stage 4 (Formula manipulation and utilization):
+-Task 4 requires the formulas to be utilized differently for the get value and set value functions 
+-My base plan is to (inside the set value function) parse the function into text, then simply display the replaced text, ignoring dependancies for the moment
+-This would theoretically allow the get value function to remain the same since as always it will just print the function if existing or not
+-Step 1 involves deciding on if a data structure is necessary for the function storage, operators, constants and cell dependancies
+-Step 2 I must be able to determine if a formula is valid or invalid and act accordingly
+-Tentative thoughts include using a stack for the formula storage, meaning each cell would have a stack in the 3rd slot, this stack would need a print function etc. 
+
+-Decided to use a stack for formulas, this involves large overhaul, a stack has been utilized from Lab 3 (linked list stack) and is added to model.h and model.c contains the functions 
+-Beginning to make adjustments to the previous code to incorperate the stack for formula functionality (this is technically stage 3) 
+-(Upon completion make sure to check if the stack is freed properly)
+-Adding to the initial stack to keep track of the stack size
+-I want this feature so that when I need to return a string in the get value I can allocate a string of appropriate length if I am dealing with a formula 
+-Ran into a conceptiual problem, if I pop off items to store in the get_value temp string then it will remove it from the formula, instead I want to copy them 
+-Added a missed function call to the "free stack" to the clear function, now I am freeing the pointer to the stack and the stack itself
+-Fixed a bug regarding freeing the stack, no need to free(temp->value) since it is a single character which doesnt require being freed, if this is changed in the future to a string this would be necessary
+
+-Tackling the previously mentioned issue where I have the popping off of the formula
+-My implementation of a fix by creating a temp stack, popping off, storing to textual_value and  then pushing back on, reverses the string/formula so new options to be explored
+-Break to consider other options as the reversal of a Stack multiple times is inefficient and unnecessary
+-Mention graphs would be more effictive 
+
+-Working to implement the bufer solution to the stack inefficiency 
+-Ran into a weird bug where it was still reversing, it was caused because I fixed the reversion for the stacks storage, but I forgot to fix the reversion
+that occured when just appending to the string which is returned by the get value function 
+
+
