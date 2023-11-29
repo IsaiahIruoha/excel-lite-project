@@ -1,0 +1,26 @@
+[
+{
+  "directory": "/Users/isaiah/Desktop/Career/Fall 2023/ELEC 278/Final Assignment/assignment/build",
+  "command": "/usr/bin/clang   -g -std=gnu11 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk -mmacosx-version-min=13.5 -o CMakeFiles/model.dir/model.c.o -c \"/Users/isaiah/Desktop/Career/Fall 2023/ELEC 278/Final Assignment/assignment/model.c\"",
+  "file": "/Users/isaiah/Desktop/Career/Fall 2023/ELEC 278/Final Assignment/assignment/model.c",
+  "output": "CMakeFiles/model.dir/model.c.o"
+},
+{
+  "directory": "/Users/isaiah/Desktop/Career/Fall 2023/ELEC 278/Final Assignment/assignment/build",
+  "command": "/usr/bin/clang   -g -std=gnu11 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk -mmacosx-version-min=13.5 -o CMakeFiles/interactive.dir/interface.c.o -c \"/Users/isaiah/Desktop/Career/Fall 2023/ELEC 278/Final Assignment/assignment/interface.c\"",
+  "file": "/Users/isaiah/Desktop/Career/Fall 2023/ELEC 278/Final Assignment/assignment/interface.c",
+  "output": "CMakeFiles/interactive.dir/interface.c.o"
+},
+{
+  "directory": "/Users/isaiah/Desktop/Career/Fall 2023/ELEC 278/Final Assignment/assignment/build",
+  "command": "/usr/bin/clang   -g -std=gnu11 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk -mmacosx-version-min=13.5 -o CMakeFiles/testrunner.dir/testrunner.c.o -c \"/Users/isaiah/Desktop/Career/Fall 2023/ELEC 278/Final Assignment/assignment/testrunner.c\"",
+  "file": "/Users/isaiah/Desktop/Career/Fall 2023/ELEC 278/Final Assignment/assignment/testrunner.c",
+  "output": "CMakeFiles/testrunner.dir/testrunner.c.o"
+},
+{
+  "directory": "/Users/isaiah/Desktop/Career/Fall 2023/ELEC 278/Final Assignment/assignment/build",
+  "command": "/usr/bin/clang   -g -std=gnu11 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk -mmacosx-version-min=13.5 -o CMakeFiles/testrunner.dir/tests.c.o -c \"/Users/isaiah/Desktop/Career/Fall 2023/ELEC 278/Final Assignment/assignment/tests.c\"",
+  "file": "/Users/isaiah/Desktop/Career/Fall 2023/ELEC 278/Final Assignment/assignment/tests.c",
+  "output": "CMakeFiles/testrunner.dir/tests.c.o"
+}
+]
