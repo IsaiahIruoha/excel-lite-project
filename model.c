@@ -22,7 +22,7 @@ void model_init() {
     // Initialize each cell with default values
     for (int row = ROW_1; row < NUM_ROWS; row++) {
         for (int col = COL_A; col < NUM_COLS; col++) {
-            spreadsheet[row][col].text = "test";
+            spreadsheet[row][col].text = "";
             spreadsheet[row][col].numeric_value = 0.0;
             spreadsheet[row][col].formula = NULL;
         }
@@ -44,7 +44,7 @@ bool parse_only_double(const char *input, double *out) { // This function is use
 }
 
 void set_cell_value(ROW row, COL col, char *text) {
-    if (text == NULL) { // If the user enters nothing, clear the cell
+    if (strcmp(text, "") == 0) { // If the user enters nothing, clear the cell
         clear_cell(row, col);
         return; 
     }
@@ -59,7 +59,7 @@ void set_cell_value(ROW row, COL col, char *text) {
     strcpy(text_copy, text); // Copy the text into the allocated memory
 
     // Logic to store the text in the 2D array
-    if(text_copy[0] == '=') { // If the text is a formula, store the formula and the numeric value
+    if(text_copy[0] == '=') { // If the text is a formula, store the formula and the numeric value (NEED TO ADD FUNCTIONALITY FOR INVALID FORMULAS, POSSIBLY A "INVALID" in the box or something)
         spreadsheet[row][col].formula = text_copy; // Store the formula, unparsed (DEALING WITH THE FUNCTION WILL BE LEFT IN A LATER STAGE) 
         spreadsheet[row][col].numeric_value = 0.0; //Will not always store 0.0, this is TEMPORARY till evaluation is implemented
         spreadsheet[row][col].text = "FUNC"; // Set the text to FUNC to indicate that the cell contains a formula TEMPORARY
@@ -80,16 +80,41 @@ void set_cell_value(ROW row, COL col, char *text) {
 }
 
 void clear_cell(ROW row, COL col) {
-    // TODO: implement this.
+    // Logic to clear the cell
+    spreadsheet[row][col].text = "";
+    spreadsheet[row][col].numeric_value = 0.0;
+    spreadsheet[row][col].formula = NULL;
 
-    // To do later, but must free(spreadsheet[row][col].text) (this will free the text_copy in set_cell_value)
-    // and free(spreadsheet[row][col].formula) (this will free the formula in set_cell_value)
-    
+    // In the future I will have to update the dependancies of any cells that depend on this cell
+    // That could be done by iterating through a dependacy array the cleared cell will have, then updating each of the cells in the array
+    // I could use a remove dependancy function to do this
+
     // This just clears the display without updating any data structure. You will need to change this.
-    update_cell_display(row, col, "");
+    update_cell_display(row, col, NULL);
+    free(spreadsheet[row][col].text); // Free the text_copy from set_cell_value
+    free(spreadsheet[row][col].formula); // Free the formula from set_cell_value
 }
 
 char *get_textual_value(ROW row, COL col) {
-    // TODO: implement this.
-    return NULL;
+    // Allocate memory for the textual representation
+    size_t text_length = strlen(spreadsheet[row][col].text); // Get the length of the text
+    char *textual_value; // Declare the textual_value variable to be accessed anywhere in the function
+    if(spreadsheet[row][col].formula != NULL) { // If the cell contains a formula, return the formula
+        size_t formula_length = strlen(spreadsheet[row][col].formula); // Get the length of the formula
+        textual_value = malloc(formula_length + 1); // Allocate memory for the formula
+        if (textual_value == NULL) { // If malloc fails, exit the program
+        // Handle allocation failure
+        exit(ENOMEM);
+        }
+        strcpy(textual_value, spreadsheet[row][col].formula); // Copy the formula into the allocated memory
+
+    } else { // If the cell does not contain a formula, return the text
+        textual_value = malloc(text_length + 1); // Allocate memory for the text
+        if (textual_value == NULL) { // If malloc fails, exit the program
+        // Handle allocation failure
+        exit(ENOMEM);
+        }
+        strcpy(textual_value, spreadsheet[row][col].text); // Copy the text into the allocated memory
+    }
+    return textual_value;
 }
