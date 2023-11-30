@@ -33,7 +33,7 @@ void stack_push(stack_ptr s, char c);
 // Returns false if the stack is empty.
 bool stack_pop(stack_ptr s, char *out);
 
-// Returns the top entry in a stack, storing the value in '*out'.
+// Returns the value at the top of the stack, without removing it.
 bool stack_peek(stack_ptr s, char *out);
 
 // A data structure representing each cell in the grid (10x10).
@@ -72,6 +72,6 @@ char *get_textual_value(ROW row, COL col);
 
 /* Extra feature ideas
 - CMD + Z for undo functionality
--
+- Additional Operations? 
 -
 */

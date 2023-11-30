@@ -49,4 +49,20 @@ that occured when just appending to the string which is returned by the get valu
 
 -Considering using a buffer array again in my stack as I will be popping, evaluating and finding a final number to place in the text but at the end the formula must remain in the stack
 
+-Realized it would be helpful to make the stack values strings instead of single characters
+-This means I wil now have to "free(temp->value)" again //SCRAPED THIS went back to characters
 
+-Midst working the evaluate function, I realized I have yet to make a valid formula function, so that is now the priority. 
+-Seems like for the formula validation I will have to use string parsing, then I can push to the stack and use the stack in the future when it comes to evaluation
+
+-Added a cell reference checker to determine, given a substring, if it is a valid cell reference
+-Finished the formula validity checker 
+
+-Some trouble shooting with invalid and valid entries into the table
+-Realized that I should be able to delete values from the editable field (PRIORITY) 
+-Tentatively completed the validity checker testing, several small adjustments to the conditionals 
+
+-Thinking of adding a check in a evaluation of the formula to only allow cell references that have numerical values 
+
+-Random Bug, If you click space on an empty cell and then enter, it crashes saying pointer being freed was not allocated
+-Messed around with changing between storing text in the cellcontent as initially "" or NULL, settled on initializing with "" since NULL caused errors, but checking if NULL to avoid strcmp 
