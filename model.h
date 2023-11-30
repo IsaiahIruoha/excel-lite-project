@@ -43,7 +43,7 @@ bool stack_is_empty(stack_ptr s);
 typedef struct {
     char *text;
     double numeric_value;
-    stack_ptr formula_stack;
+    double formula;
 } CellContent;
 
 // Static global 2D array of CellContent structs.

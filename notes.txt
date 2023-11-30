@@ -75,3 +75,6 @@ that occured when just appending to the string which is returned by the get valu
 
 -Making changes in the valid formula check finishing '-' implementation and also must fix the edge case =-A33...
 -Fixed all detectable bugs in formula checking, back to formula evaluation
+-Turns out it may be better to store the formula as a double... 
+
+-Making adjustments to redo most of the stack implementation, just have to work on the get_textual_value and then the formula implementation. 

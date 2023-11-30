@@ -68,7 +68,7 @@ void model_init() { // Initialize each cell with default values
         for (int col = COL_A; col < NUM_COLS; col++) {
             spreadsheet[row][col].text = "";
             spreadsheet[row][col].numeric_value = 0.0;
-            spreadsheet[row][col].formula_stack = NULL;
+            spreadsheet[row][col].formula = 0.0;
         }
     }
 }
@@ -159,69 +159,69 @@ bool valid_formula(const char *input) { // Function to check if the characters t
     return true;  // All checks passed
 }
 
-double eval_formula(ROW row, COL col) {
-    // Function to evaluate the formula
-    double result = 0.0;
-    double number = 0.0;
-    bool is_negative = false;
-    bool has_decimal = false;
-    char cell_ref_buffer[3]; // Buffer to store cell reference characters
-    int cell_ref_index = 0;
-    char current_char;
-    stack_pop(spreadsheet[row][col].formula_stack, &current_char); // Pop the equals sign
+double eval_formula(ROW row, COL col) { //MUST BE CHANGED NOW 
+    // // Function to evaluate the formula
+    // double result = 0.0;
+    // double number = 0.0;
+    // bool is_negative = false;
+    // bool has_decimal = false;
+    // char cell_ref_buffer[3]; // Buffer to store cell reference characters
+    // int cell_ref_index = 0;
+    // char current_char;
+    // stack_pop(spreadsheet[row][col].formula_stack, &current_char); // Pop the equals sign
 
-    while (!stack_is_empty(spreadsheet[row][col].formula_stack)) { // Iterate through the formula stack
-        stack_pop(spreadsheet[row][col].formula_stack, &current_char);
+    // while (!stack_is_empty(spreadsheet[row][col].formula_stack)) { // Iterate through the formula stack
+    //     stack_pop(spreadsheet[row][col].formula_stack, &current_char);
 
-        if (current_char == '-') {
-            // Handle negative sign
-            is_negative = true;
-            continue;
-        } else if (current_char == '.') {
-            // Handle decimal point
-            has_decimal = true;
-            continue;
-        } else if (isdigit(current_char)) {
-            // Handle digits
-            if (is_negative) {
-                number *= -1.0; // Apply the negative sign
-                is_negative = false;
-            }
+    //     if (current_char == '-') {
+    //         // Handle negative sign
+    //         is_negative = true;
+    //         continue;
+    //     } else if (current_char == '.') {
+    //         // Handle decimal point
+    //         has_decimal = true;
+    //         continue;
+    //     } else if (isdigit(current_char)) {
+    //         // Handle digits
+    //         if (is_negative) {
+    //             number *= -1.0; // Apply the negative sign
+    //             is_negative = false;
+    //         }
 
-            if (has_decimal) {
-                number /= 10.0; // Adjust for decimal place
-            }
+    //         if (has_decimal) {
+    //             number /= 10.0; // Adjust for decimal place
+    //         }
 
-            number += current_char - '0'; // Update the number with the current digit
-        } else if (isalpha(current_char)) {
-            // Handle cell reference characters
-            cell_ref_buffer[cell_ref_index++] = current_char;
-            stack_pop(spreadsheet[row][col].formula_stack, &current_char);
-            cell_ref_buffer[cell_ref_index++] = current_char;
-            cell_ref_buffer[cell_ref_index] = '\0'; // Terminate the cell reference string
-            COL col_ref = cell_ref_buffer[0] - 'A';
-            ROW row_ref = cell_ref_buffer[1] - '1';
-            number += spreadsheet[row_ref][col_ref].numeric_value;; // Update the number with the value of the referenced cell
-            cell_ref_index = 0; // Reset the cell reference buffer index
-        } 
-        // else if (current_char == '+') {
-        //     // Handle addition operation
-        //     double operand1, operand2;
-        //     stack_pop(operand_stack, &operand2);
-        //     stack_pop(operand_stack, &operand1);
-        //     result = operand1 + operand2;
-        //     stack_push(operand_stack, result); // Push the result back onto the operand stack
-        // }
+    //         number += current_char - '0'; // Update the number with the current digit
+    //     } else if (isalpha(current_char)) {
+    //         // Handle cell reference characters
+    //         cell_ref_buffer[cell_ref_index++] = current_char;
+    //         stack_pop(spreadsheet[row][col].formula_stack, &current_char);
+    //         cell_ref_buffer[cell_ref_index++] = current_char;
+    //         cell_ref_buffer[cell_ref_index] = '\0'; // Terminate the cell reference string
+    //         COL col_ref = cell_ref_buffer[0] - 'A';
+    //         ROW row_ref = cell_ref_buffer[1] - '1';
+    //         number += spreadsheet[row_ref][col_ref].numeric_value;; // Update the number with the value of the referenced cell
+    //         cell_ref_index = 0; // Reset the cell reference buffer index
+    //     } 
+    //     // else if (current_char == '+') {
+    //     //     // Handle addition operation
+    //     //     double operand1, operand2;
+    //     //     stack_pop(operand_stack, &operand2);
+    //     //     stack_pop(operand_stack, &operand1);
+    //     //     result = operand1 + operand2;
+    //     //     stack_push(operand_stack, result); // Push the result back onto the operand stack
+    //     // }
 
-        // Since operators only modify the result value when encountered,
-        // the operand stack doesn't need to be modified until an operator is encountered.
-    }
-
-    // // If a partially constructed number remains, use it as the result
-    // if (has_decimal) {
-    //     result = number;
+    //     // Since operators only modify the result value when encountered,
+    //     // the operand stack doesn't need to be modified until an operator is encountered.
     // }
-    return result;
+
+    // // // If a partially constructed number remains, use it as the result
+    // // if (has_decimal) {
+    // //     result = number;
+    // // }
+    return 101; // placeholder
 }
 
 void set_cell_value(ROW row, COL col, char *text) { // Function to set the value of a cell
@@ -236,30 +236,29 @@ void set_cell_value(ROW row, COL col, char *text) { // Function to set the value
 
     // Logic to store the text in the 2D array
     if(text_copy[0] == '=') { // If the text is a formula, store the formula and the numeric value (NEED TO ADD FUNCTIONALITY FOR INVALID FORMULAS, POSSIBLY A "INVALID" in the box or something)
-        spreadsheet[row][col].formula_stack = stack_new();  // Initialize the formula stack (This dynamically allocates memory for the stack)
-        for (size_t i = 0; i < strlen(text_copy); i++) { // Iterate through the text (the first character is '=')
-            stack_push(spreadsheet[row][col].formula_stack, text_copy[i]);  // Push each character onto the formula stack
-        }
         if (valid_formula(text_copy)) { // We now know that the formula in the stack is valid
-        spreadsheet[row][col].numeric_value = eval_formula(row, col); // Evaluate the formula and store the numeric value
-        snprintf(text_copy, sizeof(spreadsheet[row][col].text), "%.f", spreadsheet[row][col].numeric_value); // Set the text to also display the number in text form     
-        spreadsheet[row][col].text = text_copy; // Set the text to also display the number (in text form)   
+        spreadsheet[row][col].text = text_copy; // Set the formula to the text
+        spreadsheet[row][col].formula = eval_formula(row, col); // Evaluate the formula and store the numeric value   
+        // Update the display
+        int formula_size = snprintf(NULL, 0, "%f", spreadsheet[row][col].formula) + 1;
+        char *formula_string = malloc(formula_size);
+        snprintf(formula_string, formula_size, "%f", spreadsheet[row][col].formula);
+        update_cell_display(row, col, formula_string);
         } else {
-        spreadsheet[row][col].numeric_value = 0.0; // Set the numeric value to 0.0
-        spreadsheet[row][col].text = "INVALID"; // Set the text to display "INVALID"
+        spreadsheet[row][col].text = text_copy; // Set the text to display "INVALID"
+        spreadsheet[row][col].numeric_value = 0.0; // Set the numeric value to 0
+        update_cell_display(row, col, "INVALID");
         }
     } else { // If the text is a value, store the value and set the formula to NULL
-        spreadsheet[row][col].formula_stack = NULL;
+        spreadsheet[row][col].formula = 0.0;
         if(parse_only_double(text_copy, &spreadsheet[row][col].numeric_value)) { // If the text is a number, store the numeric value (This directly stores the number)
-            spreadsheet[row][col].text = text_copy; // Set the text to also display the number (in text form)
+            spreadsheet[row][col].text = text_copy; 
         } else { // If the text is not a number or a function, store the text with everything else default
-            spreadsheet[row][col].text = text_copy;
+            spreadsheet[row][col].text = text_copy; 
             spreadsheet[row][col].numeric_value = 0.0;
         }
+        update_cell_display(row, col, spreadsheet[row][col].text);
     }
-    // Update the display
-    update_cell_display(row, col, spreadsheet[row][col].text);
-
     // Free the allocated memory
     free(text); // Free the original text which is owned by the function 
 }
@@ -268,14 +267,11 @@ void clear_cell(ROW row, COL col) { // Function to clear the value of a cell
     if (strcmp(spreadsheet[row][col].text, "") == 0) { // If the cell is not empty, free the text
         free(spreadsheet[row][col].text); // Free the text_copy from set_cell_value
     }
-    if(spreadsheet[row][col].formula_stack != NULL) {
-        stack_free(spreadsheet[row][col].formula_stack); // Free the formula stack
-    }
 
     // Logic to clear the cell
     spreadsheet[row][col].text = "";
     spreadsheet[row][col].numeric_value = 0.0;
-    spreadsheet[row][col].formula_stack = NULL;
+    spreadsheet[row][col].formula = 0.0;
 
     // In the future I will have to update the dependancies of any cells that depend on this cell
     // That could be done by iterating through a dependacy array the cleared cell will have, then updating each of the cells in the array
@@ -285,43 +281,16 @@ void clear_cell(ROW row, COL col) { // Function to clear the value of a cell
     update_cell_display(row, col, "");
 }
 
-char* get_textual_value(ROW row, COL col) { // Function to get the textual value of a cell
+char* get_textual_value(ROW row, COL col) { // Function to get the textual value of a cell (MUST UPDATE THIS NEXT)
     // Allocate memory for the textual representation
     size_t text_length = strlen(spreadsheet[row][col].text); // Get the length of the text
     char *textual_value; // Declare the textual_value variable to be accessed anywhere in the function
-    if(spreadsheet[row][col].formula_stack != NULL) { // If the cell contains a formula, return the formula
-        size_t formula_length = spreadsheet[row][col].formula_stack->size; // Get the ammount of characers in the formula
-        textual_value = malloc(formula_length + 1); // Allocate memory for the formula
-        if (textual_value == NULL) { // If malloc fails, exit the program
-        // Handle allocation failure
-        exit(ENOMEM);
-        }
-
-    // Use a buffer array instead of a temporary stack
-    char buffer[formula_length];
-    size_t buffer_index = 0;
-
-    // Copy characters from the original spreadsheet[row][col].formula_stack to both textual_value and the buffer
-    for (size_t index = 0; index < formula_length; index++) {
-        char temp_char;
-        if (stack_pop(spreadsheet[row][col].formula_stack, &temp_char)) {
-            buffer[buffer_index++] = temp_char;
-            textual_value[formula_length - index - 1] = temp_char; // This deals with the reverse that happens whne popping from the stack (for the display)
-        }
-    }
-
-    // Push characters back to the original spreadsheet[row][col].formula_stack from the buffer
-    for (size_t i = buffer_index; i > 0; i--) {
-        stack_push(spreadsheet[row][col].formula_stack, buffer[i - 1]); // This deals with the reverse that happens whne popping from the stack (for the storage) 
-    }
-
-    } else { // If the cell does not contain a formula, return the text
+     // If the cell does not contain a formula, return the text
         textual_value = malloc(text_length + 1); // Allocate memory for the text
         if (textual_value == NULL) { // If malloc fails, exit the program
         // Handle allocation failure
         exit(ENOMEM);
         }
         strcpy(textual_value, spreadsheet[row][col].text); // Copy the text into the allocated memory
-    }
     return textual_value;
 }
