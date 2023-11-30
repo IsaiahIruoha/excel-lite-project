@@ -43,4 +43,10 @@ Stage 4 (Formula manipulation and utilization):
 -Ran into a weird bug where it was still reversing, it was caused because I fixed the reversion for the stacks storage, but I forgot to fix the reversion
 that occured when just appending to the string which is returned by the get value function 
 
+-Now, I will make eval_formula, a function that returns a string and takes in the row and column. 
+-Edge case, the function at that cell is NULL, therefor return "" for the string 
+-Edge case, the function is invalid for several reasons, return "#(error code)" for example #NAN, #NULL etc 
+
+-Considering using a buffer array again in my stack as I will be popping, evaluating and finding a final number to place in the text but at the end the formula must remain in the stack
+
 
