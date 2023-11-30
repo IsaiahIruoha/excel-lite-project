@@ -137,61 +137,53 @@ bool valid_formula(const char *input) { // Function to check if the characters t
     return true;  // All checks passed
 }
 
-char* eval_formula(ROW row, COL col) {
+char* eval_formula(ROW row, COL col) { // Function to evaluate the formula
 
 // Deal with case that no function is entered
 char* text_copy; // Declare the text_copy variable to be accessed anywhere in the function
-    // if (spreadsheet[row][col].formula_stack == NULL) { // If the formula is empty, return the empty string
-    //     text_copy = malloc(1); // Allocate memory for the text and the null terminator
-    //     if (text_copy == NULL) { // If malloc fails, exit the program
-    //         exit(ENOMEM);
-    //     }
-    //     text_copy[0] = '\0'; // Set the null terminator
-    //     return text_copy; // Return the text
-    // }
-    
-    // if (spreadsheet[row][col].formula_stack->size == 1) { // If the formula is only one character long, return the character
-    //     text_copy = malloc(2); // Allocate memory for the text and the null terminator
-    //     if (text_copy == NULL) { // If malloc fails, exit the program
-    //         exit(ENOMEM);
-    //     }
-    //     char temp_char;
-    //     stack_pop(spreadsheet[row][col].formula_stack, &temp_char); // Pop the character from the stack
-    //     text_copy[0] = temp_char; // Set the text to the character
-    //     text_copy[1] = '\0'; // Set the null terminator
-    //     return text_copy; // Return the text
-    // } else { // If the formula is longer than one character, evaluate the formula
+    if (spreadsheet[row][col].formula_stack == NULL) { // If the formula is empty, return the empty string
+        text_copy = malloc(1); // Allocate memory for the text and the null terminator
+        if (text_copy == NULL) { // If malloc fails, exit the program
+            exit(ENOMEM);
+        }
+        text_copy[0] = '\0'; // Set the null terminator
+        return text_copy; // Return the text
+    } else if (spreadsheet[row][col].formula_stack->size == 1) { // If the formula is only one character long, return the character
+        text_copy = malloc(2); // Allocate memory for the text and the null terminator
+        if (text_copy == NULL) { // If malloc fails, exit the program
+            exit(ENOMEM);
+        }
+        char temp_char;
+        stack_pop(spreadsheet[row][col].formula_stack, &temp_char); // Pop the character from the stack
+        text_copy[0] = temp_char; // Set the text to the character
+        text_copy[1] = '\0'; // Set the null terminator
+        return text_copy; // Return the text
+    } else { // If the formula is longer than one character, evaluate the formula
         
 
+        // size_t formula_length = spreadsheet[row][col].formula_stack->size; // Get the ammount of characters in the formula
+        // size_t buffer_index = 0;
+        // char buffer[formula_length + 1]; // Use a buffer array to copy the stack
 
+        // for (size_t index = 0; index < formula_length; index++) {
+        //     char temp_char;
+        //     stack_peek(spreadsheet[row][col].formula_stack, &temp_char); // Peek at the top of the stack
 
-    //     size_t formula_length = spreadsheet[row][col].formula_stack->size; // Get the ammount of characers in the formula
-    //     size_t buffer_index = 0;
-    //     char buffer[formula_length]; // Use a buffer array to copy the stack
+        //     // Check the temp_char to make sure it meets formula requirements
 
-    //     for (size_t index = 0; index < formula_length; index++) {
-    //         char temp_char;
-    //         stack_peek(spreadsheet[row][col].formula_stack, &temp_char); // Peek at the top of the stack
+        //     if (stack_pop(spreadsheet[row][col].formula_stack, &temp_char)) {
+        //         buffer[buffer_index++] = temp_char;
+        //         // THIS LINE WILL HAVE TO BE USED TO TRACK THE RETURN VALUE, NUMBER OR STRING TBD
+        //     }
+        // }
 
-    //         // Check the temp_char to make sure it meets formula requirements
-    //         // +,
+        // // Push characters back to the original formula_stack from the buffer
+        // for (size_t i = buffer_index; i > 0; i--) {
+        //     stack_push(spreadsheet[row][col].formula_stack, buffer[i - 1]); // This deals with the reverse that happens whne popping from the stack (for the storage) 
+        // }
 
-    //         if (stack_pop(spreadsheet[row][col].formula_stack, &temp_char)) {
-    //             buffer[buffer_index++] = temp_char;
-    //             // THIS LINE WILL HAVE TO BE USED TO TRACK THE RETURN VALUE, NUMBER OR STRING TBD
-    //         }
-    //     }
-
-    //     // Push characters back to the original formula_stack from the buffer
-    //     for (size_t i = buffer_index; i > 0; i--) {
-    //         stack_push(spreadsheet[row][col].formula_stack, buffer[i - 1]); // This deals with the reverse that happens whne popping from the stack (for the storage) 
-    //     }
-    //     return "TBD"; // This is a placeholder
-
-
-
-    // }
-   return "FUNC"; // This is a placeholder
+        return "FUNC"; // This is a placeholder
+    }
 }
 
 void set_cell_value(ROW row, COL col, char *text) {
@@ -210,7 +202,7 @@ void set_cell_value(ROW row, COL col, char *text) {
         for (size_t i = 0; i < strlen(text_copy); i++) { // Iterate through the text (the first character is '=')
             stack_push(spreadsheet[row][col].formula_stack, text_copy[i]);  // Push each character onto the formula stack
         }
-        if (valid_formula(text_copy)) {
+        if (valid_formula(text_copy)) { // We now know that the formula in the stack is valid
         spreadsheet[row][col].text = eval_formula(row, col); // Set the text to FUNC to indicate that the cell contains a formula TEMPORARY (Plan to change to EVALFUNCTION function which returns a string)
         spreadsheet[row][col].numeric_value = 0.0; //Will not always store 0.0, this is TEMPORARY till evaluation is implemented
         } else {

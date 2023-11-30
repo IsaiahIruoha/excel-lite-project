@@ -1,8 +1,8 @@
 #ifndef ASSIGNMENT_DEFS_H
 #define ASSIGNMENT_DEFS_H
 
-#define NUM_ROWS 10
-#define NUM_COLS 7
+#define NUM_ROWS 7
+#define NUM_COLS 5
 #define MAX_CELL_REF_LENGTH 3
 
 // Rows of the spreadsheet.
