@@ -66,3 +66,5 @@ that occured when just appending to the string which is returned by the get valu
 
 -Random Bug, If you click space on an empty cell and then enter, it crashes saying pointer being freed was not allocated
 -Messed around with changing between storing text in the cellcontent as initially "" or NULL, settled on initializing with "" since NULL caused errors, but checking if NULL to avoid strcmp 
+
+-Removed the "if user enters nothing, clear the cell" from the top of set_cell_value, causing bugs where it would delete even though there was pre-existing text

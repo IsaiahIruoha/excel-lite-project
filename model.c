@@ -195,11 +195,6 @@ char* text_copy; // Declare the text_copy variable to be accessed anywhere in th
 }
 
 void set_cell_value(ROW row, COL col, char *text) {
-    if (strcmp(spreadsheet[row][col].text, "") == 0) { // If the user enters nothing, clear the cell
-        clear_cell(row, col);
-        return; 
-    }
-
     // Dynamically allocate memory to store a copy of the text.
     char *text_copy = malloc(strlen(text) + 1);
 
@@ -239,7 +234,7 @@ void set_cell_value(ROW row, COL col, char *text) {
 }
 
 void clear_cell(ROW row, COL col) {
-    if (strcmp(spreadsheet[row][col].text, "") != 0) { // If the cell is not empty, free the text
+    if (strcmp(spreadsheet[row][col].text, "") == 0) { // If the cell is not empty, free the text
         free(spreadsheet[row][col].text); // Free the text_copy from set_cell_value
     }
     if(spreadsheet[row][col].formula_stack != NULL) {
