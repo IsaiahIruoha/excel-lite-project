@@ -95,12 +95,11 @@ bool is_valid_cell(const char *cell_ref) { // Function to check if a given cell 
         return false;
     }
 
-    if(cell_ref[2] != '+') { // If there's a third character, it must be a digit (1-9)
-        if (cell_ref_length == 3 && cell_ref[2] != '0') {
-            return false;
-        }
+    if (cell_ref[2] == '\0' || cell_ref[2] == '+') { // Check if the third character is the null terminator
+        return true;
     }
-    return true;  // All checks passed, valid cell reference
+    
+    return false;  // All checks passed, valid cell reference
 }
 
 bool valid_formula(const char *input) { // Function to check if the characters to the left and right of the decimal are digits
@@ -112,10 +111,10 @@ bool valid_formula(const char *input) { // Function to check if the characters t
 
     for (size_t i = 1; i < formula_length; i++) { // Start checking from the second character
         char current_char = input[i];
-
-        // Check if the current character is a digit, a decimal point, a '+', or a valid cell reference
-        if (!isdigit(current_char) && current_char != '.' && current_char != '+' && !(i + 2 <= formula_length && is_valid_cell(input + i))) {
-            return false;  // Not a digit, a decimal point, '+', or a valid cell reference
+        
+        // Check if the current character is a digit, a decimal point, a '+', a '-', or a valid cell reference
+        if (!isdigit(current_char) && current_char != '.' && current_char != '+' && current_char != '-' && !(i + 2 <= formula_length && is_valid_cell(input + i))) {
+            return false;  // Not a digit, a decimal point, '+', '-', or a valid cell reference
         }
 
         if (current_char == '.') { // Check if the decimal point is preceded and followed by digits
@@ -133,6 +132,22 @@ bool valid_formula(const char *input) { // Function to check if the characters t
             return false;  // Not a digit to the right of the decimal point
         }
         }   
+
+        if (current_char == '-') { // Check if a negative sign
+            if (formula_length < 3) { // This include the equals sign, minus sign and no digits
+                return false; // Not enough characters
+            }
+        
+            // Check the character to the left of the minus sign
+            if (i > 1 && input[i-1] != '+' && !isdigit(input[i - 1]) && !is_valid_cell(input + i - 2)) {
+                return false;  // Not a digit or a valid cell reference to the left of the minus sign
+            }
+
+            // Check the character to the right of the minus sign
+            if (i < formula_length - 1 && !isdigit(input[i + 1]) && !is_valid_cell(input + i + 1)) {
+                return false;  // Not a digit or a valid cell reference to the right of the minus sign
+            }
+        } 
     }
     return true;  // All checks passed
 }
@@ -186,7 +201,7 @@ char* text_copy; // Declare the text_copy variable to be accessed anywhere in th
     }
 }
 
-void set_cell_value(ROW row, COL col, char *text) {
+void set_cell_value(ROW row, COL col, char *text) { // Function to set the value of a cell
     // Dynamically allocate memory to store a copy of the text.
     char *text_copy = malloc(strlen(text) + 1);
 
@@ -225,7 +240,7 @@ void set_cell_value(ROW row, COL col, char *text) {
     free(text); // Free the original text which is owned by the function 
 }
 
-void clear_cell(ROW row, COL col) {
+void clear_cell(ROW row, COL col) { // Function to clear the value of a cell
     if (strcmp(spreadsheet[row][col].text, "") == 0) { // If the cell is not empty, free the text
         free(spreadsheet[row][col].text); // Free the text_copy from set_cell_value
     }
@@ -246,7 +261,7 @@ void clear_cell(ROW row, COL col) {
     update_cell_display(row, col, "");
 }
 
-char* get_textual_value(ROW row, COL col) {
+char* get_textual_value(ROW row, COL col) { // Function to get the textual value of a cell
     // Allocate memory for the textual representation
     size_t text_length = strlen(spreadsheet[row][col].text); // Get the length of the text
     char *textual_value; // Declare the textual_value variable to be accessed anywhere in the function
