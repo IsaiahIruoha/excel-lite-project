@@ -78,3 +78,9 @@ that occured when just appending to the string which is returned by the get valu
 -Turns out it may be better to store the formula as a double... 
 
 -Making adjustments to redo most of the stack implementation, just have to work on the get_textual_value and then the formula implementation. 
+-Adjustments completed, simpler code leftover 
+-Last, attempt to tackle eval using the stack 
+-Removed a lot of clutter, lots of redundencies, there was no need for 2 doubles in the cell content storage
+
+-Implemented the function to evaluate formulas
+-Built in the negatives

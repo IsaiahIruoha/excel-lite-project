@@ -6,7 +6,7 @@
 #include <stddef.h>
 
 struct stack_node {
-    char value; 
+    double value; 
     struct stack_node* next; 
 };
 
@@ -27,14 +27,14 @@ stack_ptr stack_new();
 void stack_free(stack_ptr s);
 
 // Adds an entry to a stack.
-void stack_push(stack_ptr s, char c);
+void stack_push(stack_ptr s, double c);
 
 // Removes an entry from a stack, storing the removed value in '*out'.
 // Returns false if the stack is empty.
-bool stack_pop(stack_ptr s, char *out);
+bool stack_pop(stack_ptr s, double *out);
 
 // Returns the value at the top of the stack, without removing it.
-bool stack_peek(stack_ptr s, char *out);
+bool stack_peek(stack_ptr s, double *out);
 
 // Returns true if the stack is empty.
 bool stack_is_empty(stack_ptr s);
@@ -43,7 +43,6 @@ bool stack_is_empty(stack_ptr s);
 typedef struct {
     char *text;
     double numeric_value;
-    double formula;
 } CellContent;
 
 // Static global 2D array of CellContent structs.
@@ -72,9 +71,3 @@ void clear_cell(ROW row, COL col);
 char *get_textual_value(ROW row, COL col);
 
 #endif //ASSIGNMENT_MODEL_H
-
-/* Extra feature ideas
-- CMD + Z for undo functionality
-- Additional Operations? 
--
-*/
