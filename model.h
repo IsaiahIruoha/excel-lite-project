@@ -33,12 +33,6 @@ void stack_push(stack_ptr s, double c);
 // Returns false if the stack is empty.
 bool stack_pop(stack_ptr s, double *out);
 
-// Returns the value at the top of the stack, without removing it.
-bool stack_peek(stack_ptr s, double *out);
-
-// Returns true if the stack is empty.
-bool stack_is_empty(stack_ptr s);
-
 // A data structure representing each cell in the grid (10x10).
 typedef struct {
     char *text;

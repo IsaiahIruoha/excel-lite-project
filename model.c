@@ -48,21 +48,6 @@ bool stack_pop(stack_ptr s, double *out) { // This function is the same as stack
     return true; // Return true to show that a pop has occured 
 }
 
-bool stack_peek(stack_ptr s, double *out) { // This function is the same as stack_pop except it does not remove the top node
-    if (s->head == NULL) { // Check if the stack exists
-        return false; // Return false if it does not exist
-    }
-    *out = s->head->value; // Dereference the character storage location, assign it to store the value at the head node
-    return true; // Return true to show that a peek has occured 
-}
-
-bool stack_is_empty(stack_ptr s) { // This function checks if the stack is empty
-    if (s->head == NULL) { // Check if the stack exists
-        return true; // Return true if it does not exist
-    }
-    return false; // Return false if it does exist
-}
-
 void model_init() { // Initialize each cell with default values
     for (int row = ROW_1; row < NUM_ROWS; row++) {
         for (int col = COL_A; col < NUM_COLS; col++) {
