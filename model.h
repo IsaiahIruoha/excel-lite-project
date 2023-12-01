@@ -33,10 +33,19 @@ void stack_push(stack_ptr s, double c);
 // Returns false if the stack is empty.
 bool stack_pop(stack_ptr s, double *out);
 
+
+typedef struct { // A struct to represent a cell's dependencies
+    ROW row;
+    COL col;
+} CellDependency;
+
 // A data structure representing each cell in the grid (10x10).
 typedef struct {
     char *text;
     double numeric_value;
+    CellDependency *dependents;
+    size_t num_dependents;
+    size_t max_dependents;
 } CellContent;
 
 // Static global 2D array of CellContent structs.

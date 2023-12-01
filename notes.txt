@@ -84,3 +84,10 @@ that occured when just appending to the string which is returned by the get valu
 
 -Implemented the function to evaluate formulas
 -Built in the negatives
+-Begin stage 5
+
+-Fixed bug with lowercase letters
+-Added functions for cell dependencies, specifically add dependancies and update dependencies
+-Using a dynamically allocated array which each cell has, to store its dependencies
+-The array holds its own data structure of row and column
+-Also added a tracker for each cell for max dependancies and num dependancies

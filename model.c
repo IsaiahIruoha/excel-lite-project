@@ -53,6 +53,11 @@ void model_init() { // Initialize each cell with default values
         for (int col = COL_A; col < NUM_COLS; col++) {
             spreadsheet[row][col].text = "";
             spreadsheet[row][col].numeric_value = 0.0;
+
+            // Initialize dependencies array
+            spreadsheet[row][col].dependents = NULL;
+            spreadsheet[row][col].num_dependents = 0;
+            spreadsheet[row][col].max_dependents = 0;
         }
     }
 }
@@ -170,12 +175,14 @@ double eval_formula(char *eqn) { // Function to evaluate a formula
         }
         // Check if the character is an alphabet (indicating a cell reference)
         else if (isalpha(*eqn)) {
+            char uppercase_char = toupper(*eqn); // Convert the character to uppercase
+
             // If the next character is not a digit, return false
             if (!isdigit(eqn[1])) {
                 return false;
             }
             // Extract the column and row information from the cell reference
-            COL current_col = (COL)(eqn[0] - 'A');
+            COL current_col = (COL)(uppercase_char - 'A');
             ROW current_row = strtol(eqn += 1, &eqn, 10) - 1; 
             // Check if the cell reference is within the valid range
             if (current_col * current_row >= NUM_COLS * NUM_ROWS || current_col * current_row < 0) {
@@ -216,6 +223,44 @@ double eval_formula(char *eqn) { // Function to evaluate a formula
     return result;
 }
 
+void add_dependent(CellContent *cell, ROW row, COL col) { // Function to add a dependent cell to the array of dependents
+    // Check if there is enough space in the array
+    if (cell->num_dependents < cell->max_dependents) {
+        // Add the new dependent cell to the array
+        cell->dependents[cell->num_dependents].row = row;
+        cell->dependents[cell->num_dependents].col = col;
+        cell->num_dependents++;
+    } else {
+        // Resize the array
+        size_t new_max_dependents = (cell->max_dependents == 0) ? 1 : cell->max_dependents * 2; // Double the size of the array
+        CellDependency *new_dependents = realloc(cell->dependents, new_max_dependents * sizeof(CellDependency));
+
+        if (new_dependents == NULL) {
+            // Handle memory allocation failure
+            exit(ENOMEM);
+        }
+
+        cell->dependents = new_dependents;
+        cell->max_dependents = new_max_dependents;
+
+        // Add the new dependent cell to the resized array
+        cell->dependents[cell->num_dependents].row = row;
+        cell->dependents[cell->num_dependents].col = col;
+        cell->num_dependents++;
+    }
+}
+
+void update_dependents(ROW row, COL col) { // Function to update dependents when a cell changes
+    // Iterate through the dependents of the changed cell
+    for (size_t i = 0; i < spreadsheet[row][col].num_dependents; i++) {
+        ROW dependent_row = spreadsheet[row][col].dependents[i].row;
+        COL dependent_col = spreadsheet[row][col].dependents[i].col;
+
+        // Recalculate and update the value of each dependent cell
+        set_cell_value(dependent_row, dependent_col, spreadsheet[dependent_row][dependent_col].text);
+    }
+}
+
 void set_cell_value(ROW row, COL col, char *text) { // Function to set the value of a cell
 
     char *text_copy = strdup(text); // Dynamically allocate memory to store a copy of the text.
@@ -229,6 +274,11 @@ void set_cell_value(ROW row, COL col, char *text) { // Function to set the value
         }
 
     strcpy(text_copy, text); // Copy the text into the allocated memory
+
+    // Handle dependencies if the cell has existing dependents ---
+    if (spreadsheet[row][col].num_dependents > 0) {
+        update_dependents(row, col);  // Update dependents before changing the cell value
+    }
 
     // Logic to store the text in the 2D array
     if(text_copy[0] == '=') { // If the text is a formula, store the formula and the numeric value
@@ -257,6 +307,12 @@ void set_cell_value(ROW row, COL col, char *text) { // Function to set the value
         }
         update_cell_display(row, col, spreadsheet[row][col].text);
     }
+
+        // Handle dependencies after changing the cell value---
+        if (spreadsheet[row][col].num_dependents > 0) {
+            update_dependents(row, col);
+        }
+
 }
 
 void clear_cell(ROW row, COL col) { // Function to clear the value of a cell
@@ -264,28 +320,36 @@ void clear_cell(ROW row, COL col) { // Function to clear the value of a cell
         free(spreadsheet[row][col].text); // Free the text_copy from set_cell_value
     }
 
+    // Handle dependencies if the cell has existing dependents---
+    if (spreadsheet[row][col].num_dependents > 0) {
+        update_dependents(row, col);
+    }
+
     // Logic to clear the cell
     spreadsheet[row][col].text = "";
     spreadsheet[row][col].numeric_value = 0.0;
 
-    // In the future I will have to update the dependancies of any cells that depend on this cell
-    // That could be done by iterating through a dependacy array the cleared cell will have, then updating each of the cells in the array
-    // I could use a remove dependancy function to do this
+    // Handle dependencies after clearing the cell value---
+    if (spreadsheet[row][col].num_dependents > 0) {
+        update_dependents(row, col);
+    }
 
     // This just clears the display without updating any data structure. You will need to change this.
     update_cell_display(row, col, "");
 }
 
-char* get_textual_value(ROW row, COL col) { // Function to get the textual value of a cell
-    // Allocate memory for the textual representation
-    size_t text_length = strlen(spreadsheet[row][col].text); // Get the length of the text
-    char *textual_value; // Declare the textual_value variable to be accessed anywhere in the function
-     // If the cell does not contain a formula, return the text
-        textual_value = malloc(text_length + 1); // Allocate memory for the text
-        if (textual_value == NULL) { // If malloc fails, exit the program
-        // Handle allocation failure
-        exit(ENOMEM);
-        }
-        strcpy(textual_value, spreadsheet[row][col].text); // Copy the text into the allocated memory
-    return textual_value;
+char* get_textual_value(ROW row, COL col) {
+    // Check if the cell has dependencies
+    if (spreadsheet[row][col].num_dependents > 0) {
+        // If there are dependencies, update the value before returning
+        spreadsheet[row][col].numeric_value = eval_formula(spreadsheet[row][col].text);
+
+        // Update the display (stringify the formula value)
+        int formula_size = snprintf(NULL, 0, "%f", spreadsheet[row][col].numeric_value) + 1;
+        char *formula_string = malloc(formula_size);
+        snprintf(formula_string, formula_size, "%.1f", spreadsheet[row][col].numeric_value);
+        update_cell_display(row, col, formula_string);
+    }
+
+    return strdup(spreadsheet[row][col].text); // Return a copy of the textual value
 }
