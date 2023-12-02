@@ -91,3 +91,33 @@ that occured when just appending to the string which is returned by the get valu
 -Using a dynamically allocated array which each cell has, to store its dependencies
 -The array holds its own data structure of row and column
 -Also added a tracker for each cell for max dependancies and num dependancies
+
+-Dependencies causing infinite recursive loop 
+-Fix Recursive loop, test simple cases first
+
+-Realized I am approaching dependancies wrong, I was making an array for each cell that had cells that it was dependent when I need to consider 
+what cells are dependent on it, that way when I update it, I can update those cells accordingly. 
+-The reverse is confusing as if I have the cells that it is dependent on and I am making a change to it, it wouldnt matter 
+-If I kept this line of thinking, before each change of a cell I would have to check if there are any cells that have this changing cell in their array which is inefficient
+-Both methods are applicable, except the first method requires me to iterate over every cell every time a value changes to make sure no cells are dependent on it
+-Second method requires me to iterate over all cells when I a cell is modified to find dependencies (Storing dependencies for each cell that depends on it)
+
+    // // Check if the cell has dependencies
+    // if (spreadsheet[row][col].num_dependents > 0) {
+    //     // If there are dependencies, update the value before returning
+    //     spreadsheet[row][col].numeric_value = eval_formula(spreadsheet[row][col].text, row, col);
+
+    //     // Update the display (stringify the formula value)
+    //     int formula_size = snprintf(NULL, 0, "%f", spreadsheet[row][col].numeric_value) + 1;
+    //     char *formula_string = malloc(formula_size);
+    //     snprintf(formula_string, formula_size, "%.1f", spreadsheet[row][col].numeric_value);
+    //     update_cell_display(row, col, formula_string);
+    //     // Free the allocated memory
+    //     free(formula_string);
+    // }
+
+-I have made the surface level dependencies work, lots of bugs 
+-Considering having both methods in the model to increase efficiency
+-If I clear a cell that is dependent on another cell, I need to remove it from the list of dependents of the referenced cell
+-This would require iterating through every cell and checking if the current cell is in the list of dependents of the referenced cell
+-This would be very inefficient, so I added an array to each cell to store its dependents

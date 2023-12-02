@@ -39,17 +39,24 @@ typedef struct { // A struct to represent a cell's dependencies
     COL col;
 } CellDependency;
 
-// A data structure representing each cell in the grid (10x10).
+// A data structure representing each cell in the grid (7x9).
 typedef struct {
     char *text;
     double numeric_value;
     CellDependency *dependents;
     size_t num_dependents;
     size_t max_dependents;
+    bool is_updating; // A flag to prevent circular dependencies
 } CellContent;
 
 // Static global 2D array of CellContent structs.
 CellContent spreadsheet[NUM_ROWS][NUM_COLS];
+
+// Adds a cell to the list of dependents of the given cell
+void add_dependent(ROW current_row, COL current_col, ROW row, COL col); 
+
+// Checks and updates dependant cells
+void update_dependents(ROW row, COL col);
 
 // Initializes the data structure.
 //
@@ -62,6 +69,8 @@ void model_init();
 // cell contents data structure; it is its responsibility to ensure it is freed
 // once it is no longer needed.
 void set_cell_value(ROW row, COL col, char *text);
+
+void set_value(ROW row, COL col, char *text);
 
 // Clears the value of a cell.
 void clear_cell(ROW row, COL col);
