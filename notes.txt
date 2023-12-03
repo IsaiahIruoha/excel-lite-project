@@ -106,4 +106,10 @@ what cells are dependent on it, that way when I update it, I can update those ce
 -Considering having both methods in the model to increase efficiency
 -If I clear a cell that is dependent on another cell, I need to remove it from the list of dependents of the referenced cell
 -This would require iterating through every cell and checking if the current cell is in the list of dependents of the referenced cell
--This would be very inefficient, so I added an array to each cell to store its dependents
+
+-Finished the assignment, dealt with circular dependencies using a flag to check if it is updating to stop the crash
+-Displays ERROR in the cell is a circular dependency occurs 
+-Formatted code using prettier extension
+-Adjusted comments and removed unprofessional language 
+
+-Pushed final code to private github repository
