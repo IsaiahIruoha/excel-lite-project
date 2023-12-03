@@ -115,10 +115,10 @@ bool is_valid_cell(const char *cell_ref)
         return false;
     }
     if (cell_ref[2] == '\0' || cell_ref[2] == '+')
-    { // Check if the third character is the null terminator
+    { // All checks passed if the third character is a null terminator or addition sign, valid cell reference
         return true;
     }
-    return false; // All checks passed, valid cell reference
+    return false; 
 }
 
 bool valid_formula(const char *input)
