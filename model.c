@@ -55,6 +55,7 @@ bool stack_pop(stack_ptr s, double *out)
     {                 // Check if the stack exists
         return false; // Return false if it does not exist
     }
+
     struct stack_node *temp = s->head; // Create a temporary pointer to a stack_node storing the memory address of the current head
     *out = s->head->value;             // Dereference the character storage location, assign it to store the value at the head node
     s->head = s->head->next;           // Change the head node to the next node
@@ -82,29 +83,22 @@ void model_init()
 
 bool parse_only_double(char *input, double *out)
 {
-    char *endptr;
-    // Use function to convert the input string to a double
-    double result = strtod(input, &endptr);
+    // Function to check if a string is only a valid double
+    char *end_ptr;
+    double result = strtod(input, &end_ptr);
 
-    // Check if no characters were used in the conversion
-    if (input == endptr)
-    {
-        // In this case, the input is not a valid number
+    // Check if the entire string was consumed and there are no trailing non-numeric characters
+    if (*end_ptr != '\0' && !isspace(*end_ptr)) {
         return false;
     }
-    // Check if there are non-numeric characters after the numeric part
-    while (*endptr)
-    {
-        if (!isspace(*endptr))
-        {
-            // Non-numeric characters found after the numeric part
-            return false;
-        }
-        endptr++;
+
+    // Check if the conversion was unsuccessful
+    if (input == end_ptr) {
+        return false;
+    } else {
+        *out = result;
+        return true;
     }
-    // If characters were used in the conversion and no non-numeric characters follow, store the result
-    *out = result;
-    return true;
 }
 
 bool is_valid_cell(char *cell_ref)
@@ -206,6 +200,7 @@ void add_dependent(ROW current_row, COL current_col, ROW row, COL col)
             // Handle memory allocation failure
             exit(ENOMEM);
         }
+
         cell->dependents = new_dependents;
         cell->max_dependents = new_max_dependents;
         // Add the new dependent cell to the resized array
@@ -265,6 +260,7 @@ double eval_formula(char *eqn, ROW row, COL col)
             {                     // Check if the current cell is referencing itself
                 return 0.0 / 0.0; // Return NaN if there is a circular dependency
             }
+
             // Check if the referenced cell is a dependent of the current cell, if it is then there is a circular dependency
             for (int i = 0; i < spreadsheet[row][col].num_dependents; i++)
             {
@@ -274,6 +270,7 @@ double eval_formula(char *eqn, ROW row, COL col)
                     return 0.0 / 0.0; // Return NaN if there is a circular dependency
                 }
             }
+
             bool is_already_dependent = false; // Variable to track if the current cell is already a dependent of the referenced cell
             for (int i = 0; i < spreadsheet[current_row][current_col].num_dependents; i++)
             { // Iterate through the dependents of the referenced cell
@@ -284,6 +281,7 @@ double eval_formula(char *eqn, ROW row, COL col)
                     break;
                 }
             }
+            
             if (!is_already_dependent)
             { // If the current cell is not already a dependent of the referenced cell
                 add_dependent(current_row, current_col, row, col); // Add the current cell to the list of dependents of the referenced cell
@@ -293,7 +291,8 @@ double eval_formula(char *eqn, ROW row, COL col)
             is_negative = false; // Reset the flag after processing the negative sign
         }
         else
-        { // Will only ever be a digit or a decimal point
+        { 
+            // Will only ever be a digit or a decimal point
             // Convert the numeric substring to a double and push it onto the stack
             stack_push(stack_number, is_negative ? -strtod(eqn, &eqn) : strtod(eqn, &eqn));
             is_negative = false; // Reset the flag after processing the negative sign
@@ -304,6 +303,7 @@ double eval_formula(char *eqn, ROW row, COL col)
         stack_pop(stack_number, &output);
         result += output;
     }
+
     // Free the memory allocated for the stack
     stack_free(stack_number);
     // Return the final result of the formula
@@ -363,7 +363,6 @@ void set_cell_value(ROW row, COL col, char *text)
     { // If the text is a value, store the value and set the formula to NULL
         if (parse_only_double(text_copy, &spreadsheet[row][col].numeric_value))
         { // If the text is a number, store the numeric value (This directly stores the number)
-        printf("numeric value:                                                                   %f\n", spreadsheet[row][col].numeric_value);
             spreadsheet[row][col].text = text_copy;
         }
         else
@@ -385,6 +384,7 @@ void clear_cell(ROW row, COL col)
     {                                     // If the cell is not empty, free the text
         free(spreadsheet[row][col].text); // Free the text_copy from set_cell_value
     }
+
     // Logic to clear the cell
     spreadsheet[row][col].text = "";
     spreadsheet[row][col].numeric_value = 0.0;
