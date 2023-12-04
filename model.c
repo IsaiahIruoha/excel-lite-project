@@ -80,24 +80,34 @@ void model_init()
     }
 }
 
-bool parse_only_double(const char *input, double *out)
-{ 
-    // This function is used to check if the input is completely a number or not
+bool parse_only_double(char *input, double *out)
+{
     char *endptr;
+    // Use function to convert the input string to a double
     double result = strtod(input, &endptr);
 
+    // Check if no characters were used in the conversion
     if (input == endptr)
-    { // endptr is the same as input if no characters were used
+    {
+        // In this case, the input is not a valid number
         return false;
     }
-    else
+    // Check if there are non-numeric characters after the numeric part
+    while (*endptr)
     {
-        *out = result; // Store the result in the out parameter
-        return true;
+        if (!isspace(*endptr))
+        {
+            // Non-numeric characters found after the numeric part
+            return false;
+        }
+        endptr++;
     }
+    // If characters were used in the conversion and no non-numeric characters follow, store the result
+    *out = result;
+    return true;
 }
 
-bool is_valid_cell(const char *cell_ref)
+bool is_valid_cell(char *cell_ref)
 { 
     // Function to check if a given cell reference is valid
     size_t cell_ref_length = strlen(cell_ref);
@@ -247,7 +257,6 @@ double eval_formula(char *eqn, ROW row, COL col)
         else if (isalpha(*eqn))
         {                                        // Check if the character is an alphabet (indicating a cell reference)
             char uppercase_char = toupper(*eqn); // Convert the character to uppercase
-
             // Extract the column and row information from the cell reference
             COL current_col = (COL)(uppercase_char - 'A');
             ROW current_row = strtol(eqn += 1, &eqn, 10) - 1;
@@ -256,7 +265,6 @@ double eval_formula(char *eqn, ROW row, COL col)
             {                     // Check if the current cell is referencing itself
                 return 0.0 / 0.0; // Return NaN if there is a circular dependency
             }
-
             // Check if the referenced cell is a dependent of the current cell, if it is then there is a circular dependency
             for (int i = 0; i < spreadsheet[row][col].num_dependents; i++)
             {
@@ -276,12 +284,10 @@ double eval_formula(char *eqn, ROW row, COL col)
                     break;
                 }
             }
-
             if (!is_already_dependent)
             { // If the current cell is not already a dependent of the referenced cell
                 add_dependent(current_row, current_col, row, col); // Add the current cell to the list of dependents of the referenced cell
             }
-
             // Push the numeric value of the referenced cell onto the stack
             stack_push(stack_number, is_negative ? -spreadsheet[current_row][current_col].numeric_value : spreadsheet[current_row][current_col].numeric_value);
             is_negative = false; // Reset the flag after processing the negative sign
@@ -307,24 +313,19 @@ double eval_formula(char *eqn, ROW row, COL col)
 void set_cell_value(ROW row, COL col, char *text)
 { 
     // Function to set the value of a cell
-
     if (spreadsheet[row][col].is_updating)
     {
         // Handle base case or return
         return;
     }
-
     // Set the updating flag to true
     spreadsheet[row][col].is_updating = true;
-
     char *text_copy = strdup(text); // Dynamically allocate memory to store a copy of the text.
     if (text_copy == NULL)
     { // If malloc fails, exit the program
         exit(ENOMEM);
     }
-
     strcpy(text_copy, text); // Copy the text into the allocated memory
-
     // Logic to store the text in the 2D array
     if (text_copy[0] == '=')
     { // If the text is a formula, store the formula and the numeric value
@@ -333,7 +334,6 @@ void set_cell_value(ROW row, COL col, char *text)
         {                                                                            // We now know that the formula is valid and can be evaluated
             spreadsheet[row][col].text = text_copy;                                  // Set the formula to the text
             spreadsheet[row][col].numeric_value = eval_formula(text_copy, row, col); // Evaluate the formula and store the numeric value
-
             if (isnan(spreadsheet[row][col].numeric_value))
             { // Check if the numeric value is NaN
                 update_dependents(row, col);
@@ -363,6 +363,7 @@ void set_cell_value(ROW row, COL col, char *text)
     { // If the text is a value, store the value and set the formula to NULL
         if (parse_only_double(text_copy, &spreadsheet[row][col].numeric_value))
         { // If the text is a number, store the numeric value (This directly stores the number)
+        printf("numeric value:                                                                   %f\n", spreadsheet[row][col].numeric_value);
             spreadsheet[row][col].text = text_copy;
         }
         else
@@ -384,7 +385,6 @@ void clear_cell(ROW row, COL col)
     {                                     // If the cell is not empty, free the text
         free(spreadsheet[row][col].text); // Free the text_copy from set_cell_value
     }
-
     // Logic to clear the cell
     spreadsheet[row][col].text = "";
     spreadsheet[row][col].numeric_value = 0.0;
