@@ -1,5 +1,0 @@
-/Users/isaiah/Desktop/Career/Fall 2023/ELEC 278/Final Assignment/assignment/build/CMakeFiles/model.dir
-/Users/isaiah/Desktop/Career/Fall 2023/ELEC 278/Final Assignment/assignment/build/CMakeFiles/interactive.dir
-/Users/isaiah/Desktop/Career/Fall 2023/ELEC 278/Final Assignment/assignment/build/CMakeFiles/testrunner.dir
-/Users/isaiah/Desktop/Career/Fall 2023/ELEC 278/Final Assignment/assignment/build/CMakeFiles/edit_cache.dir
-/Users/isaiah/Desktop/Career/Fall 2023/ELEC 278/Final Assignment/assignment/build/CMakeFiles/rebuild_cache.dir

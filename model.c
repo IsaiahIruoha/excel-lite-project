@@ -2,7 +2,7 @@
 
 // Functionality: This file contains the logic for the spreadsheet model
 
-// External Resources: Prettier (Code Formatting)
+// External Resources: Prettier (Code Formatting Extension) - https://prettier.io/ - makes my code look clean and consistent
 
 // Attach header files
 #include "model.h"
@@ -91,7 +91,6 @@ bool parse_only_double(char *input, double *out)
     if (*end_ptr != '\0' && !isspace(*end_ptr)) {
         return false;
     }
-
     // Check if the conversion was unsuccessful
     if (input == end_ptr) {
         return false;
@@ -320,20 +319,15 @@ void set_cell_value(ROW row, COL col, char *text)
     }
     // Set the updating flag to true
     spreadsheet[row][col].is_updating = true;
-    char *text_copy = strdup(text); // Dynamically allocate memory to store a copy of the text.
-    if (text_copy == NULL)
-    { // If malloc fails, exit the program
-        exit(ENOMEM);
-    }
-    strcpy(text_copy, text); // Copy the text into the allocated memory
+    
     // Logic to store the text in the 2D array
-    if (text_copy[0] == '=')
+    if (text[0] == '=')
     { // If the text is a formula, store the formula and the numeric value
 
-        if (valid_formula(text_copy))
+        if (valid_formula(text))
         {                                                                            // We now know that the formula is valid and can be evaluated
-            spreadsheet[row][col].text = text_copy;                                  // Set the formula to the text
-            spreadsheet[row][col].numeric_value = eval_formula(text_copy, row, col); // Evaluate the formula and store the numeric value
+            spreadsheet[row][col].text = text;                                  // Set the formula to the text
+            spreadsheet[row][col].numeric_value = eval_formula(text, row, col); // Evaluate the formula and store the numeric value
             if (isnan(spreadsheet[row][col].numeric_value))
             { // Check if the numeric value is NaN
                 update_dependents(row, col);
@@ -353,7 +347,7 @@ void set_cell_value(ROW row, COL col, char *text)
         }
         else
         {
-            spreadsheet[row][col].text = text_copy;          // Set the text to hold the invalid formula
+            spreadsheet[row][col].text = text;          // Set the text to hold the invalid formula
             spreadsheet[row][col].numeric_value = 0.0 / 0.0; // Set the numeric value to 0
             update_dependents(row, col);
             update_cell_display(row, col, "INVALID"); // display invalid for invalid formula
@@ -361,13 +355,13 @@ void set_cell_value(ROW row, COL col, char *text)
     }
     else
     { // If the text is a value, store the value and set the formula to NULL
-        if (parse_only_double(text_copy, &spreadsheet[row][col].numeric_value))
+        if (parse_only_double(text, &spreadsheet[row][col].numeric_value))
         { // If the text is a number, store the numeric value (This directly stores the number)
-            spreadsheet[row][col].text = text_copy;
+            spreadsheet[row][col].text = text;
         }
         else
         { // If the text is not a number or a function, store the text with everything else default
-            spreadsheet[row][col].text = text_copy;
+            spreadsheet[row][col].text = text;
             spreadsheet[row][col].numeric_value = 0.0 / 0.0;
         }
         update_dependents(row, col);
@@ -386,10 +380,16 @@ void clear_cell(ROW row, COL col)
     }
 
     // Logic to clear the cell
-    spreadsheet[row][col].text = "";
+    strcpy(spreadsheet[row][col].text, "");
     spreadsheet[row][col].numeric_value = 0.0;
+
     // Initialize dependencies array
     update_dependents(row, col);
+    free(spreadsheet[row][col].dependents); // Free the dependents array
+    spreadsheet[row][col].dependents = NULL;
+    spreadsheet[row][col].is_updating = false;
+    spreadsheet[row][col].num_dependents = 0;
+    spreadsheet[row][col].max_dependents = 0;
     update_cell_display(row, col, "");
 }
 
